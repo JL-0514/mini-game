@@ -1,33 +1,28 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
+        
+        // Camera system
+        this.game.camera = this;
+        this.x = 0;
+        this.y = 0;
+        this.midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.WARRIOR_WIDTH / 2;
+        this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.WARRIOR_HEIGHT / 2;
+
+        this.currentMap = null;
+
         this.warrior = new Warrior(game, 5, 0);
         this.loadScene();
     }
 
     loadScene() {
-
-        this.warrior.state = 1;
         this.game.addEntity(this.warrior);
-
-        // More warriors for demonstration
-        let warriorRunLeft = new Warrior(this.game, 700, 3 * 45);
-        warriorRunLeft.state = 1;
-        warriorRunLeft.direction = 1;
-        this.game.addEntity(warriorRunLeft);
-
-        let warriorAttackRight = new Warrior(this.game, 5, 6 * 45);
-        warriorAttackRight.state = 2;
-        this.game.addEntity(warriorAttackRight);
-
-        let warriorAttackLeft = new Warrior(this.game, 5 + 3 * 70, 6 * 45);
-        warriorAttackLeft.state = 2;
-        warriorAttackLeft.direction = 1;
-        this.game.addEntity(warriorAttackLeft);
     }
 
     update() {
-
+        // Make camera follow warrior
+        this.x = this.warrior.x - this.midpointX;
+        this.y = this.warrior.y - this.midpointY;
     }
 
     draw(ctx) {

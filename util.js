@@ -1,5 +1,9 @@
 /** Global Parameters Object */
-const params = { };
+const PARAMS = {
+    BLOCK_SIZE: 70,
+    WARRIOR_WIDTH: 138,
+    WARRIOR_HEIGHT: 88
+ };
 
 /**
  * @param {Number} n
