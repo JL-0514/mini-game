@@ -2,7 +2,11 @@ const gameEngine = new GameEngine();
 
 const ASSET_MANAGER = new AssetManager();
 
+// Sprite sheets
 ASSET_MANAGER.queueDownload("./sprites/warrior.png");
+ASSET_MANAGER.queueDownload("./sprites/long-bricks.png");
+ASSET_MANAGER.queueDownload("./sprites/short-bricks.png");
+ASSET_MANAGER.queueDownload("./sprites/floors.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	const canvas = document.getElementById("gameWorld");

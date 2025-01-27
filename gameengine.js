@@ -19,7 +19,6 @@ class GameEngine {
         this.keyD = false;
         this.keyW = false;
         this.keyS = false;
-        this.keyDown = false;
 
         this.clockTick = null;
 
@@ -86,7 +85,6 @@ class GameEngine {
 
         // Key down listener
         const keyDownListener = e => {
-            this.keyDown = true;
             switch (e.code) {
                 case "KeyA":
                     if (!this.keyD) this.keyA= true;
@@ -107,7 +105,6 @@ class GameEngine {
 
         // Key up listener
         const keyUpListener = e => {
-            this.keyDown = false;
             switch (e.code) {
                 case "KeyA":
                     this.keyA = false;
@@ -134,6 +131,8 @@ class GameEngine {
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
+
+        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
 
         // Rotate the canvas so it looks like the car is running forward
         for (var i = 0; i < this.entities.length; i++) {

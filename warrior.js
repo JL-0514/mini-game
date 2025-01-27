@@ -13,7 +13,7 @@ class Warrior {
         this.direction = 0; 
 
         /** Speed of running */
-        this.speed = 3;
+        this.speed = 8;
 
         /** Warrior's attack power. */
         this.attack = 10;
@@ -67,7 +67,7 @@ class Warrior {
             }
         } else if (this.game.click != null) {
             this.state = 2;
-        } else if (this.game.keyDown) {
+        } else if (this.game.keyA || this.game.keyD || this.game.keyS || this.game.keyW) {
             if (this.game.keyA) {
                 this.x -= this.speed;
                 this.direction = 1;
