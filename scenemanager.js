@@ -9,9 +9,10 @@ class SceneManager {
         this.midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.WARRIOR_WIDTH / 2;
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.WARRIOR_HEIGHT / 2;
 
-        this.currentMap = null;
-
         this.warrior = new Warrior(game,0, 0);
+        this.game.warrior = this.warrior;
+
+        this.currentMap = null;
         this.loadScene(MAP);
     }
 
@@ -49,10 +50,26 @@ class SceneManager {
             });
         }
 
+        // Load collectibles
+        if (scene.crystal) {
+            scene.crystal.forEach(e => {
+                this.game.addEntity(new Crystal(this.game,
+                    e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE));
+            });
+        }
+        // TODO: Add monsters
+        if (scene.chest) {
+            scene.chest.forEach(e => {
+                this.game.addEntity(new Chest(this.game,
+                    e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE));
+            });
+        }
+
         // Load warrior
         this.warrior.x = scene.warrior.col * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - PARAMS.WARRIOR_WIDTH / 2;
         this.warrior.y = scene.warrior.row * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - PARAMS.WARRIOR_HEIGHT / 2;
         this.game.addEntity(this.warrior);
+        this.game.addEntity(this.warrior.blade);
     }
 
     update() {

@@ -38,7 +38,6 @@ class GameEngine {
     };
 
     start() {
-        this.running = true;
         const gameLoop = () => {
             this.loop();
             requestAnimFrame(gameLoop, this.ctx.canvas);
@@ -122,6 +121,20 @@ class GameEngine {
         };
         this.ctx.canvas.addEventListener("keyup", keyUpListener, false);
         this.listeners.keyUp = keyUpListener;
+
+        const visibilityListner = () => {
+            if (document.visibilityState != "visible") {
+                this.click = null;
+                this.mouse = null;
+                this.wheel = null;
+                this.keyA = false;
+                this.keyD = false;
+                this.keyW = false;
+                this.keyS = false;
+            }
+        }
+        document.addEventListener("visibilitychange", visibilityListner, false);
+        this.listeners.visibility = visibilityListner;
     };
 
     addEntity(entity) {
@@ -143,9 +156,9 @@ class GameEngine {
     };
 
     update() {
+        CollisionHandler.handleCollision(this.warrior, this.entities);
 
         let entitiesCount = this.entities.length;
-
         for (let i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
 
@@ -153,6 +166,7 @@ class GameEngine {
                 entity.update();
             }
         }
+
         this.camera.update();
 
         for (let i = this.entities.length - 1; i >= 0; --i) {
