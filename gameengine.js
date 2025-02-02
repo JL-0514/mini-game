@@ -5,6 +5,7 @@ class GameEngine {
         // What you will use to draw
         // Documentation: https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D
         this.ctx = null;
+        this.lightCtx = null;
 
         // Everything that will be updated and drawn each frame
         this.entities = [];
@@ -31,8 +32,9 @@ class GameEngine {
         };
     };
 
-    init(ctx) {
+    init(ctx, lightCtx) {
         this.ctx = ctx;
+        this.lightCtx = lightCtx;
         this.startInput();
         this.timer = new Timer();
     };
@@ -143,9 +145,7 @@ class GameEngine {
 
     draw() {
         // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
-
-        this.ctx.fillRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.width);
+        this.ctx.clearRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
 
         // Rotate the canvas so it looks like the car is running forward
         for (var i = 0; i < this.entities.length; i++) {
@@ -153,12 +153,33 @@ class GameEngine {
         }
         
         this.camera.draw(this.ctx);
+
+        if (this.camera.state == 1) {   // If the maze is loaded
+            this.lightCtx.save();
+            this.lightCtx.clearRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
+            for (var i = 0; i < this.entities.length; i++) {
+                let e = this.entities[i];
+                if (e.isLighting) {
+                    let cx = e.x + e.width / 2;
+                    let cy = e.y + e.height / 2;
+                    this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.99)";
+                    this.lightCtx.beginPath();
+                    this.lightCtx.arc(cx - this.camera.x, cy - this.camera.y, e.view, 0, 2 * Math.PI);
+                    this.lightCtx.fill();
+                }
+            }
+            this.lightCtx.fillStyle = "rgba(0, 0, 0, 1)";
+            this.lightCtx.globalCompositeOperation = "xor";
+            this.lightCtx.fillRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
+            this.lightCtx.restore();
+        } else {
+            this.lightCtx.clearRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
+        }
     };
 
     update() {
-        CollisionHandler.handleCollision(this.warrior, this.entities);
-
         let entitiesCount = this.entities.length;
+
         for (let i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
 
@@ -168,6 +189,8 @@ class GameEngine {
         }
 
         this.camera.update();
+
+        CollisionHandler.handleCollision(this, this.entities);
 
         for (let i = this.entities.length - 1; i >= 0; --i) {
             if (this.entities[i].removeFromWorld) {

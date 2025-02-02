@@ -6,11 +6,20 @@ class Warrior {
         /** Scale of the warrior. */
         this.scale = PARAMS.WARRIOR_WIDTH / 69;
 
+        /** Width of the frame of the warrior. */
+        this.width = PARAMS.WARRIOR_WIDTH;
+
+        /** Height of the frame of the warrior. */
+        this.height = PARAMS.WARRIOR_HEIGHT;
+
         /** State of the warrior (which animation to draw): 0=idle, 1=run, 2=attack, 3=hurt 4=death */
         this.state = 0;
 
         /** Direction of the warrior: 0=right, 1=left */
         this.direction = 0; 
+
+        /** Whether the warrior is visible. */
+        this.isLighting = true;
 
         /** Speed of running */
         this.speed = 8;
@@ -28,7 +37,7 @@ class Warrior {
         this.blade = new Blade(this.game, this);
 
         /** Radius of the circle of visible range. */
-        this.view = 100;
+        this.view = 200;
 
         /** Experience of current level. */
         this.experience = 0;

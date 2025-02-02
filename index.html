@@ -4,9 +4,15 @@
 <head>
     <meta charset="utf-8">
     <title>Game Project Title Goes Here</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Distressed&display=swap" rel="stylesheet">
   
     <script type="text/javascript" src="./scene.js"></script>
     <script type="text/javascript" src="./collectible.js"></script>
+    <script type="text/javascript" src="./projectile.js"></script>
+    <script type="text/javascript" src="./transition.js"></script>
     <script type="text/javascript" src="./enemy.js"></script>
     <script type="text/javascript" src="./background.js"></script>
     <script type="text/javascript" src="./boundingbox.js"></script>
@@ -19,8 +25,32 @@
     <script type="text/javascript" src="./scenemanager.js"></script>
     <script type="text/javascript" src="./util.js"></script>
     <script type="text/javascript" src="./main.js"></script>
+
+    <style>
+        #stack {
+            position: relative;
+            padding-left: 0;
+            padding-right: 0;
+            width: 1200px;
+            margin: auto;
+        }
+        #gameWorld {
+            position: absolute;
+            z-index: 0;
+        }
+        #light {
+            position: absolute;
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-    <canvas id="gameWorld" width="1200" height="800" style="background: white; border: 1px solid black" tabindex="0" autofocus></canvas>
+    <div id="stack">
+        <canvas id="gameWorld" width="1200" height="800" style="background: black; border: 1px solid black" 
+            tabindex="0" autofocus></canvas>
+        <canvas id="light" width="1200" height="800" style="border: 1px solid black" 
+            tabindex="0" autofocus></canvas>
+    </div>
 </body>
 </html>

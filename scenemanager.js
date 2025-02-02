@@ -9,14 +9,26 @@ class SceneManager {
         this.midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.WARRIOR_WIDTH / 2;
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.WARRIOR_HEIGHT / 2;
 
+        // The main character
         this.warrior = new Warrior(game,0, 0);
         this.game.warrior = this.warrior;
 
+        // Gameplay related
+        this.keyCollected = 4;
+
+        // Load map
+        this.state = 0;     // 0=title, 1=maze scene, 2=ending screen
+
+        this.title = new StartTransition(this.game);
+        this.endScreen = new EndTransition(this.game);
+
         this.currentMap = null;
-        this.loadScene(MAP);
+        this.loadScene(MAZE);
     }
 
     loadScene(scene) {
+        this.state = scene.state;
+        
         // Load backgroud
         if (scene.floor) {
             scene.floor.forEach(e => {
@@ -57,10 +69,15 @@ class SceneManager {
                     e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE));
             });
         }
-        // TODO: Add monsters
         if (scene.chest) {
             scene.chest.forEach(e => {
                 this.game.addEntity(new Chest(this.game,
+                    e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE));
+            });
+        }
+        if (scene.key) {
+            scene.key.forEach(e => {
+                this.game.addEntity(new Key(this.game,
                     e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE));
             });
         }
@@ -76,9 +93,11 @@ class SceneManager {
         // Make camera follow warrior
         this.x = this.warrior.x - this.midpointX;
         this.y = this.warrior.y - this.midpointY;
+
+        if (this.state == 2) this.endScreen.update();
     }
 
     draw(ctx) {
-
+        if (this.state == 2) this.endScreen.draw(ctx);
     }
 }

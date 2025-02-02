@@ -11,7 +11,7 @@ class Animator {
      * @param {number} frameCount Total number of frames in this animation.
      * @param {number} frameDuration How long a frame last before move to next frame.
      * @param {number} framePadding Horizontal gap between each frame in the spritesheet.
-     * @param {boolean} reverse Whether it should flip the animation.
+     * @param {boolean} flip Whether the animation should be flip along y-axis.
      * @param {boolean} loop Whether the animation should be play in loop.
      * 
      * @property {number} elapsedTime Time it has been animated.
@@ -42,7 +42,7 @@ class Animator {
             ctx.save();
             ctx.scale(-1, 1);
             ctx.drawImage(this.spritesheet,
-                col * this.width + this.framePadding, row * this.height,
+                col * (this.width + this.framePadding), row * this.height,
                 this.width, this.height,
                 -x - this.width * scale, y,
                 this.width * scale,
@@ -50,7 +50,7 @@ class Animator {
             ctx.restore();
         } else {
             ctx.drawImage(this.spritesheet,
-                col * this.width, row * this.height,
+                col * (this.width + this.framePadding), row * this.height,
                 this.width, this.height,
                 x, y,
                 this.width * scale,

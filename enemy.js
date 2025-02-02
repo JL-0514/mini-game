@@ -1,11 +1,14 @@
-class Dregfly {
+class Enemy {
+
+}
+class Dregfly extends Enemy {
 
 }
 
-class Wolf {
+class Wolf extends Enemy {
 
 }
 
-class Monster {
+class Monster extends Enemy {
     
 }

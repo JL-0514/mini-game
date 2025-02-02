@@ -14,16 +14,21 @@ ASSET_MANAGER.queueDownload("./sprites/key.png");
 ASSET_MANAGER.queueDownload("./sprites/monster.png");
 ASSET_MANAGER.queueDownload("./sprites/title.png");
 ASSET_MANAGER.queueDownload("./sprites/wolf.png");
+ASSET_MANAGER.queueDownload("./sprites/teleportCircle.png");
 
 ASSET_MANAGER.downloadAll(() => {
-	const canvas = document.getElementById("gameWorld");
-	const ctx = canvas.getContext("2d");
+	let canvas = document.getElementById("gameWorld");
+	let ctx = canvas.getContext("2d");
 	ctx.imageSmoothingEnabled = false;
+
+	let lightCanvas = document.getElementById("light");
+	let lightCtx = lightCanvas.getContext("2d");
+	lightCanvas.imageSmoothingEnabled = false;
 
 	PARAMS.CANVAS_WIDTH = canvas.width;
 	PARAMS.CANVAS_HEIGHT = canvas.height;
 
-	gameEngine.init(ctx);
+	gameEngine.init(ctx, lightCtx);
 
 	new SceneManager(gameEngine);
 

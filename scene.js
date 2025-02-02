@@ -1,4 +1,5 @@
-const MAP = {
+const MAZE = {
+    state: 1,
     warrior: {row: 42, col: 30},
     floor: [
         {row: 14, col: 1, endRow: 44, endCol: 5},
@@ -281,5 +282,12 @@ const MAP = {
         {row: 59, col: 102},
         {row: 74, col: 68},
         {row: 77, col: 50},
+    ],
+    key: [
+        {row: 13, col: 34},
+        {row: 34, col: 70},
+        {row: 72, col: 30},
+        {row: 76, col: 82},
+        {row: 60, col: 118},
     ],
 }

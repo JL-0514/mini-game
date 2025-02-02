@@ -2,6 +2,7 @@ class VerticalWall {
     constructor(game, x, y, count) {
         Object.assign(this, { game, x, y, count });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/short-bricks.png");
+        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE * count);
     }
 
     update() {
@@ -22,6 +23,7 @@ class HorizontalWall {
     constructor(game, x, y, count) {
         Object.assign(this, { game, x, y, count });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/long-bricks.png");
+        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE * count, PARAMS.BLOCK_SIZE);
     }
 
     update() {
@@ -42,6 +44,7 @@ class BreakableVerticalWall {
     constructor(game, x, y, count) {
         Object.assign(this, { game, x, y, count });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/short-bricks.png");
+        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE * count);
     }
 
     update() {
@@ -62,6 +65,7 @@ class BreakableHorizontalWall {
     constructor(game, x, y, count) {
         Object.assign(this, { game, x, y, count });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/long-bricks.png");
+        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE * count, PARAMS.BLOCK_SIZE);
     }
 
     update() {
@@ -98,5 +102,23 @@ class Floor {
                     PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE);
             }
         }
+    }
+}
+
+class Teleporter {
+    constructor(game, x, y) {
+        Object.assign(this, { game, x, y });
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/teleportCircle.png");
+        this.animation = new Animator(this.spritesheet, 2, 3, 4, 256, 256, 4, 0.3, 0, false, true);
+        this.BB = new BoundingBox(this.x, this.y, 256, 256);
+    }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+        this.animation.drawFrame(this.game.clockTick, ctx, 
+            this.x - this.game.camera.x, this.y - this.game.camera.y, 1);
     }
 }
