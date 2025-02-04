@@ -1,8 +1,6 @@
 /** Global Parameters Object */
 const PARAMS = {
     BLOCK_SIZE: 80,
-    WARRIOR_WIDTH: 207,
-    WARRIOR_HEIGHT: 132
  };
 
 /**

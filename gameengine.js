@@ -161,7 +161,7 @@ class GameEngine {
                 let e = this.entities[i];
                 if (e.isLighting) {
                     let cx = e.x + e.width / 2;
-                    let cy = e.y + e.height / 2;
+                    let cy = e.BB.y + e.BB.height / 2;
                     this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.99)";
                     this.lightCtx.beginPath();
                     this.lightCtx.arc(cx - this.camera.x, cy - this.camera.y, e.view, 0, 2 * Math.PI);

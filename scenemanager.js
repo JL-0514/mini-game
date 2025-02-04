@@ -1,17 +1,17 @@
 class SceneManager {
     constructor(game) {
         this.game = game;
+
+        // The main character
+        this.warrior = new Warrior(game, 0, 0);
+        this.game.warrior = this.warrior;
         
         // Camera system
         this.game.camera = this;
         this.x = 0;
         this.y = 0;
-        this.midpointX = PARAMS.CANVAS_WIDTH / 2 - PARAMS.WARRIOR_WIDTH / 2;
-        this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - PARAMS.WARRIOR_HEIGHT / 2;
-
-        // The main character
-        this.warrior = new Warrior(game,0, 0);
-        this.game.warrior = this.warrior;
+        this.midpointX = PARAMS.CANVAS_WIDTH / 2 - this.warrior.width / 2;
+        this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - this.warrior.height / 2;
 
         // Gameplay related
         this.keyCollected = 4;
@@ -83,8 +83,10 @@ class SceneManager {
         }
 
         // Load warrior
-        this.warrior.x = scene.warrior.col * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - PARAMS.WARRIOR_WIDTH / 2;
-        this.warrior.y = scene.warrior.row * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - PARAMS.WARRIOR_HEIGHT / 2;
+        this.warrior.x = scene.warrior.col * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - this.warrior.width / 2;
+        this.warrior.y = scene.warrior.row * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - this.warrior.height / 2;
+
+        // this.game.addEntity(new Dregfly(this.game, this.warrior.x, this.warrior.y, 0));
         this.game.addEntity(this.warrior);
         this.game.addEntity(this.warrior.blade);
     }
