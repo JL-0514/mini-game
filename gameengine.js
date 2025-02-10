@@ -151,8 +151,6 @@ class GameEngine {
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx);
         }
-        
-        this.camera.draw(this.ctx);
 
         if (this.camera.state == 1) {   // If the maze is loaded
             this.lightCtx.save();
@@ -175,10 +173,14 @@ class GameEngine {
         } else {
             this.lightCtx.clearRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
         }
+
+        this.camera.draw(this.ctx);
     };
 
     update() {
         let entitiesCount = this.entities.length;
+
+        this.camera.update();
 
         for (let i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
@@ -187,8 +189,6 @@ class GameEngine {
                 entity.update();
             }
         }
-
-        this.camera.update();
 
         CollisionHandler.handleCollision(this, this.entities);
 

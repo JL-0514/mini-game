@@ -1,0 +1,7 @@
+class DangerArea {
+
+}
+
+class AxeAttackArea {
+    
+}

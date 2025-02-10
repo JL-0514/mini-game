@@ -15,6 +15,9 @@ ASSET_MANAGER.queueDownload("./sprites/monster.png");
 ASSET_MANAGER.queueDownload("./sprites/title.png");
 ASSET_MANAGER.queueDownload("./sprites/wolf.png");
 ASSET_MANAGER.queueDownload("./sprites/teleportCircle.png");
+ASSET_MANAGER.queueDownload("./sprites/health-bar.png");
+ASSET_MANAGER.queueDownload("./sprites/hud.png");
+ASSET_MANAGER.queueDownload("./sprites/icons.png");
 
 ASSET_MANAGER.downloadAll(() => {
 	let canvas = document.getElementById("gameWorld");

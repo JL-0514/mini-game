@@ -44,14 +44,20 @@ class Warrior {
         /** Experience of current level. */
         this.experience = 0;
 
+        /** Experience needed to level up. */
+        this.expToNextLevel = 30;
+
         /** The current level. */
         this.level = 0;
 
-        /** Avaliable points for upgrade. */
-        this.upgradePoint = 0;
-
         /** Number of crystal owned. */
-        this.crystal = 0;
+        this.crystal = 2;
+
+        /** Number of health portion warrior has. */
+        this.healthPortion = 0;
+
+        /** Number of axe warrior has. */
+        this.axe = 1;
 
 
         /** Time passed since current animation start. */
@@ -173,10 +179,14 @@ class Warrior {
         }
 
         // Level up
-        if (this.experience >= 30) {
-            this.upgradePoint++;
+        if (this.experience >= this.expToNextLevel) {
             this.level++;
             this.experience %= 30;
+            this.expToNextLevel += 5;
+            this.attack += 2;
+            let perc = this.health / this.maxHealth;
+            this.maxHealth += 10;
+            this.health = Math.round(this.maxHealth * perc);
         }
 
         // Update bounding box

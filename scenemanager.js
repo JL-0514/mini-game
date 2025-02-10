@@ -14,14 +14,13 @@ class SceneManager {
         this.midpointY = PARAMS.CANVAS_HEIGHT / 2 - this.warrior.height / 2;
 
         // Gameplay related
-        this.keyCollected = 4;
+        this.keyCollected = 0;
 
         // Load map
         this.state = 0;     // 0=title, 1=maze scene, 2=ending screen
-
         this.title = new StartTransition(this.game);
         this.endScreen = new EndTransition(this.game);
-
+        this.hud = new HUD(this.game, this.warrior);
         this.currentMap = null;
         this.loadScene(MAZE);
     }
@@ -87,19 +86,38 @@ class SceneManager {
         this.warrior.y = scene.warrior.row * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - this.warrior.height / 2;
 
         // this.game.addEntity(new Dregfly(this.game, this.warrior.x, this.warrior.y, 0));
+        // this.game.addEntity(new Wolf(this.game, this.warrior.x, this.warrior.y, 0));
+        // this.game.addEntity(new Monster(this.game, this.warrior.x, this.warrior.y, 0));
         this.game.addEntity(this.warrior);
         this.game.addEntity(this.warrior.blade);
     }
 
     update() {
-        // Make camera follow warrior
-        this.x = this.warrior.x - this.midpointX;
-        this.y = this.warrior.y - this.midpointY;
-
-        if (this.state == 2) this.endScreen.update();
+        switch(this.state) {
+            case 0:     // Title
+                break;
+            case 1:     // Maze
+                this.x = this.warrior.x - this.midpointX;
+                this.y = this.warrior.y - this.midpointY;
+                this.hud.update();
+                break;
+            case 2:     // End
+                this.endScreen.update();
+                break;
+        }
     }
 
     draw(ctx) {
-        if (this.state == 2) this.endScreen.draw(ctx);
+        switch(this.state) {
+            case 0:     // Title
+                this.title.draw(ctx);
+                break;
+            case 1:     // Maze
+                this.hud.draw(this.game.lightCtx);
+                break;
+            case 2:     // End
+                this.endScreen.draw(ctx);
+                break;
+        }
     }
 }

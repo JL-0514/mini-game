@@ -13,8 +13,8 @@ class CollisionHandler {
      * 8. Enemy and wall, enemy turn around.
      * 9. Enemy and warrior's blade, enemy get damaged.
      * 
-     * 10. Projectile and wall, projectile remove from the world.
-     * 11. Projectile and warrior's blade, projectile remove from the world.
+     * 10. Projectile and wall, play destroy animation.
+     * 11. Projectile and warrior's blade, play destroy animation.
      * 
      * @param {GameEngine} game The game engine
      * @param {*} entities List of entities
@@ -56,15 +56,13 @@ class CollisionHandler {
                             else e1.y -= o.y;
                         }
                     }
-                    // 2 
-                    else if (e2 instanceof Enemy && e2.state == 1 && e1.state < 3 && !e1.noDamage
-                        && e1.BB.collide(e2.BB)) {
+                    // 2, 3
+                    else if ((e2 instanceof Enemy || e2 instanceof Projectile) && e2.state == 1 
+                        && e1.state < 3 && !e1.noDamage && e1.BB.collide(e2.BB)) {
                         e1.health -= e2.attack;
                         if (e1.state < 2) e1.state = 3;
-                    }
-                    // 3
-                    else if ( e2 instanceof Projectile && !(e1.state == 3) && e1.BB.collide(e2.BB)) {
-                        
+                        else e1.noDamage = true;
+                        if (e2 instanceof Projectile) e2.state = 0;
                     }
                     // 4
                     else if (e2 instanceof Crystal && e1.BB.collide(e2.BB)) {
@@ -85,11 +83,12 @@ class CollisionHandler {
                     // 6
                     else if (e2 instanceof Chest && !e2.opened && e2.enemy == 0 && e1.BB.collide(e2.BB)) {
                         e2.opened = true;
-                        e1.upgradePoint++;
+                        e1.experience += 50;
                         e1.view += 10;
                     }
                     // 7
                     else if (e2 instanceof Teleporter && e1.BB.collide(e2.BB)) {
+                        game.entities = [];
                         game.camera.state = 2;
                     }
                 } 
@@ -103,6 +102,13 @@ class CollisionHandler {
                     else if (e2 instanceof Blade && e1.BB.collide(e2.BB)) {
                         e1.dealAttack(e2.warrior.attack);
                     } 
+                }
+                // Collision with projectile
+                else if (e1 instanceof Projectile) {
+                    // 10, 11
+                    if ((e2 instanceof Wall || e2 instanceof Blade) && e1.BB.collide(e2.BB)) {
+                        e1.state = 0;
+                    }
                 }
             }
         }

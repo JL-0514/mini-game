@@ -2,6 +2,14 @@ class StartTransition {
     constructor(game) {
         this.game = game;
     }
+
+    update() {
+
+    }
+
+    draw(ctx) {
+        
+    }
 }
 
 class EndTransition {
@@ -29,8 +37,10 @@ class EndTransition {
             ctx.drawImage(this.background, 0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
             ctx.fillStyle = "white";
             ctx.font = "40px 'Rubik Distressed'"
-            ctx.fillText("CONGRATULATION", PARAMS.CANVAS_WIDTH / 2 - 200, PARAMS.CANVAS_HEIGHT / 2);
-            ctx.fillText("YOU ESCAPED", PARAMS.CANVAS_WIDTH / 2 - 150, PARAMS.CANVAS_HEIGHT / 2 + 45);
+            let w = ctx.measureText("CONGRATULATION").width;
+            ctx.fillText("CONGRATULATION", PARAMS.CANVAS_WIDTH / 2 - w / 2, PARAMS.CANVAS_HEIGHT / 2);
+            w = ctx.measureText("YOU ESCAPED").width;
+            ctx.fillText("YOU ESCAPED", PARAMS.CANVAS_WIDTH / 2 - w / 2, PARAMS.CANVAS_HEIGHT / 2 + 45);
         }
     }
 }
