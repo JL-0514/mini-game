@@ -240,15 +240,17 @@ class Wolf extends Enemy {
             this.animations[1][0].elapsedTime = 0;
             this.animations[1][1].elapsedTime = 0;
             this.state = 1;
+        } 
+        if (this.state == 0) {
+            // Change direction
+            let dx = this.target.BB.x + this.target.BB.width / 2 - (this.BB.x + this.BB.width / 2);
+            let dy = this.target.BB.y + this.target.BB.height / 2 - (this.BB.y + this.BB.height / 2);
+            if (dx + this.target.BB.width / 2 < 0) this.direction = 1;
+            else if (dx - this.target.BB.width / 2 > 0) this.direction = 0;
+            // Move toward target and let collision detection deal with it
+            this.x += dx / distance * this.speed;
+            this.y += dy / distance * this.speed;
         }
-        // Change direction
-        let dx = this.target.BB.x + this.target.BB.width / 2 - (this.BB.x + this.BB.width / 2);
-        let dy = this.target.BB.y + this.target.BB.height / 2 - (this.BB.y + this.BB.height / 2);
-        if (dx + this.target.BB.width / 2 < 0) this.direction = 1;
-        else if (dx - this.target.BB.width / 2 > 0) this.direction = 0;
-        // Move toward target and let collision detection deal with it
-        this.x += dx / distance * this.speed;
-        this.y += dy / distance * this.speed;
     }
 
     updateBB() {
@@ -338,6 +340,11 @@ class Monster extends Enemy {
             // Move toward target and let collision detection deal with it
             this.x += dx / distance * this.speed;
             this.y += dy / distance * this.speed;
+            this.state = 0;
+        } else if (distance < 150) {
+            // Move away from the target if too close
+            this.x -= dx / distance * this.speed;
+            this.y -= dy / distance * this.speed;
             this.state = 0;
         } else {
             this.attackElapsedTime += this.game.clockTick;

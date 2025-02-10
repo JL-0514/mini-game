@@ -87,7 +87,7 @@ class SceneManager {
 
         // this.game.addEntity(new Dregfly(this.game, this.warrior.x, this.warrior.y, 0));
         // this.game.addEntity(new Wolf(this.game, this.warrior.x, this.warrior.y, 0));
-        // this.game.addEntity(new Monster(this.game, this.warrior.x, this.warrior.y, 0));
+        this.game.addEntity(new Monster(this.game, this.warrior.x, this.warrior.y, 0));
         this.game.addEntity(this.warrior);
         this.game.addEntity(this.warrior.blade);
     }
