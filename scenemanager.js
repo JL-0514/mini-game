@@ -64,14 +64,18 @@ class SceneManager {
         // Load collectibles
         if (scene.crystal) {
             scene.crystal.forEach(e => {
-                this.game.addEntity(new Crystal(this.game,
-                    e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE));
+                this.game.addEntity(new Crystal(this.game, e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE));
             });
         }
         if (scene.chest) {
             scene.chest.forEach(e => {
-                this.game.addEntity(new Chest(this.game,
-                    e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE));
+                let c = new Chest(this.game, e.col * PARAMS.BLOCK_SIZE, e.row * PARAMS.BLOCK_SIZE);
+                this.game.addEntity(c);
+                e.enemy.forEach(en => {
+                    this.game.addEntity(new ENEMIES[en.type](this.game, c,
+                        en.col * PARAMS.BLOCK_SIZE, en.row * PARAMS.BLOCK_SIZE, en.path));
+                    c.enemyCount++;
+                });
             });
         }
         if (scene.key) {
@@ -84,10 +88,6 @@ class SceneManager {
         // Load warrior
         this.warrior.x = scene.warrior.col * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - this.warrior.width / 2;
         this.warrior.y = scene.warrior.row * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - this.warrior.height / 2;
-
-        // this.game.addEntity(new Dregfly(this.game, this.warrior.x, this.warrior.y, 0));
-        // this.game.addEntity(new Wolf(this.game, this.warrior.x, this.warrior.y, 0));
-        this.game.addEntity(new Monster(this.game, this.warrior.x, this.warrior.y, 0));
         this.game.addEntity(this.warrior);
         this.game.addEntity(this.warrior.blade);
     }

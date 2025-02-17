@@ -22,10 +22,11 @@ class Crystal {
 }
 
 class Chest {
-    constructor(game, x, y, enemy) {   // TODO: Add count or monsters
-        Object.assign(this, { game, x, y, enemy });
+    constructor(game, x, y) {   // TODO: Add count or monsters
+        Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/chest.png");
         this.opened = false;
+        this.enemyCount = 0;
         this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE);
     }
 

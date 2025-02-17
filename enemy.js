@@ -11,11 +11,11 @@ class Enemy {
      * @param {number} speed Speed of the enemy.
      * @param {number} view Radius of the area the enemy can detect the target.
      */
-    constructor(game, x, y, path, maxHealth, attack, speed, view=400) {
+    constructor(game, chest, x, y, path, maxHealth, attack, speed, view=400) {
         if (this.constructor == Enemy) {
             throw new Error("Abstract classes can't be instantiated.");
         }
-        Object.assign(this, { game, x, y, path, maxHealth, attack, speed, view });
+        Object.assign(this, { game, chest, x, y, path, maxHealth, attack, speed, view });
         this.target = game.warrior;
 
         // 0=right, 1=left
@@ -52,6 +52,7 @@ class Enemy {
             if (this.health <= 0) {
                 this.removeFromWorld = true;
                 this.target.experience += 25;
+                this.chest.enemyCount--;
             }
         }
         // Make enemy bounce off from the blade if attacked
@@ -103,7 +104,6 @@ class Enemy {
                 }
             }
         }
-        console.log(this.health);
     }
 
     draw(ctx) {
@@ -134,8 +134,8 @@ class Enemy {
 }
 
 class Dregfly extends Enemy {
-    constructor(game, x, y, path) {
-        super(game, x, y, path, 80, 10, 2);
+    constructor(game, chest, x, y, path) {
+        super(game, chest, x, y, path, 80, 10, 2);
 
         this.scale = 90 / 40;
         this.width = 40 * this.scale;
@@ -175,7 +175,7 @@ class Dregfly extends Enemy {
      */
     attackTarget(distance) {
         super.attackTarget(distance);
-        this.state = distance < 30 ? 1 : 0;
+        this.state = distance < 40 ? 1 : 0;
         // Change direction
         let dx = this.target.BB.x + this.target.BB.width / 2 - (this.BB.x + this.BB.width / 2);
         let dy = this.target.BB.y + this.target.BB.height / 2 - (this.BB.y + this.BB.height / 2);
@@ -194,8 +194,8 @@ class Dregfly extends Enemy {
 
 
 class Wolf extends Enemy {
-    constructor(game, x, y, path) {
-        super(game, x, y, path, 60, 20, 1.5);
+    constructor(game, chest, x, y, path) {
+        super(game, chest, x, y, path, 60, 20, 1.5);
 
         this.scale = 200 / 96;
         this.width = 96 * this.scale;
@@ -272,8 +272,8 @@ class Wolf extends Enemy {
 }
 
 class Monster extends Enemy {
-    constructor(game, x, y, path) {
-        super(game, x, y, path, 40, 30, 2.5);
+    constructor(game, chest, x, y, path) {
+        super(game, chest, x, y, path, 40, 30, 2.5);
 
         this.scale = 150 / 64;
         this.width = 64 * this.scale;
@@ -439,3 +439,9 @@ class Projectile {
         ctx.drawImage(rotateCanvas, this.x - this.game.camera.x, this.y - this.game.camera.y, this.width, this.height);
     }
 }
+
+const ENEMIES = {
+    "Dregfly": Dregfly,
+    "Wolf": Wolf,
+    "Monster": Monster,
+};

@@ -269,18 +269,35 @@ const MAZE = {
         {row: 79, col: 66},
     ],
     chest: [    // TODO: Add monster info
-        {row: 4, col: 50, enemy: []},
+        {row: 4, col: 50, enemy: [
+            {row: 6, col: 50, path: 1, type: "Wolf"},
+            {row: 4, col: 52, path: 0, type: "Wolf"},
+        ]},
         {row: 14, col: 6, enemy: []},
-        {row: 25, col: 106, enemy: []},
+        {row: 25, col: 106, enemy: [
+            {row: 22, col: 106, path: 0, type: "Monster"},
+            {row: 25, col: 103, path: 1, type: "Monster"},
+        ]},
         {row: 26, col: 128, enemy: []},
         {row: 29, col: 34, enemy: []},
         {row: 37, col: 104, enemy: []},
         {row: 43, col: 74, enemy: []},
-        {row: 46, col: 124, enemy: []},
-        {row: 50, col: 60, enemy: []},
-        {row: 59, col: 35, enemy: []},
+        {row: 46, col: 124, enemy: [
+            {row: 44, col: 124, path: 0, type: "Dregfly"},
+            {row: 48, col: 124, path: 0, type: "Dregfly"},
+        ]},
+        {row: 50, col: 60, enemy: [
+            {row: 48, col: 60, path: 0, type: "Monster"},
+        ]},
+        {row: 59, col: 35, enemy: [
+            {row: 57, col: 35, path: 0, type: "Dregfly"},
+            {row: 61, col: 35, path: 0, type: "Dregfly"},
+        ]},
         {row: 59, col: 102, enemy: []},
-        {row: 74, col: 68, enemy: []},
+        {row: 74, col: 68, enemy: [
+            {row: 74, col: 65, path: 1, type: "Wolf"},
+            {row: 74, col: 69, path: 1, type: "Wolf"},
+        ]},
         {row: 77, col: 50, enemy: []},
     ],
     key: [

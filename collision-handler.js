@@ -81,7 +81,7 @@ class CollisionHandler {
                             game.addEntity(new Teleporter(game, 28 * PARAMS.BLOCK_SIZE, 42 * PARAMS.BLOCK_SIZE));
                     }
                     // 6
-                    else if (e2 instanceof Chest && !e2.opened && e2.enemy == 0 && e1.BB.collide(e2.BB)) {
+                    else if (e2 instanceof Chest && !e2.opened && e2.enemyCount == 0 && e1.BB.collide(e2.BB)) {
                         e2.opened = true;
                         e1.experience += 50;
                         e1.view += 10;
