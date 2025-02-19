@@ -18,9 +18,6 @@ class Warrior {
         /** Direction of the warrior: 0=right, 1=left */
         this.direction = 0; 
 
-        /** Whether the warrior is visible. */
-        this.isLighting = true;
-
 
         /** Speed of running */
         this.speed = 8;
@@ -196,15 +193,15 @@ class Warrior {
     updateBB() {
         switch(this.state) {
             case 0:
-                this.BB = new BoundingBox(this.x + (16 + 16 * this.direction) * this.scale, this.y + 10 * this.scale, 
+                this.BB = new RectangularBB(this.x + (16 + 16 * this.direction) * this.scale, this.y + 10 * this.scale, 
                                         21 * this.scale, 33 * this.scale);
                 break;
             case 1:
-                this.BB = new BoundingBox(this.x + (11 + 16 * this.direction) * this.scale, this.y + 10 * this.scale, 
+                this.BB = new RectangularBB(this.x + (11 + 16 * this.direction) * this.scale, this.y + 10 * this.scale, 
                                         31 * this.scale, 33 * this.scale);
                 break;
             case 2: case 3:
-                this.BB = new BoundingBox(this.x + (16 + 13 * this.direction)  * this.scale, this.y + 10 * this.scale, 
+                this.BB = new RectangularBB(this.x + (16 + 13 * this.direction)  * this.scale, this.y + 10 * this.scale, 
                                         24 * this.scale, 33 * this.scale);
                 break;
         }
@@ -226,11 +223,11 @@ class Blade {
 
     update() {
         if (this.warrior.state == 2) {
-            this.BB = new BoundingBox(this.warrior.x + (40 - 36 * this.warrior.direction) * this.warrior.scale, 
+            this.BB = new RectangularBB(this.warrior.x + (40 - 36 * this.warrior.direction) * this.warrior.scale, 
                         this.warrior.y + 10 * this.warrior.scale, 
                         25 * this.warrior.scale, 33 * this.warrior.scale);
         } else {
-            this.BB = new BoundingBox(0, 0, 0, 0);
+            this.BB = new RectangularBB(0, 0, 0, 0);
         }
     }
 

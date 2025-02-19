@@ -5,13 +5,12 @@ class Crystal {
         this.scale = 4;
         this.width = 13 * this.scale;
         this.height = 16 * this.scale;
-        this.isLighting = true;
-        this.view = 100;
-        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
+        this.light = new LightSource(this.game, this.x + this.width / 2, this.y + this.height / 2, 400);
     }
 
     update() {
-
+        
     }
 
     draw(ctx) {
@@ -27,7 +26,7 @@ class Chest {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/chest.png");
         this.opened = false;
         this.enemyCount = 0;
-        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE);
+        this.BB = new RectangularBB(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE);
     }
 
     update() {
@@ -54,10 +53,9 @@ class Key {
         this.scale = 4;
         this.width = 16 * this.scale;
         this.height = 16 * this.scale;
-        this.isLighting = true;
-        this.view = 100;
-        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
         this.animation = new Animator(this.spritesheet, 0, 0, 4, 16, 16, 8, 0.2, 0, false, true);
+        this.light = new LightSource(this.x + this.width / 2, this.y + this.height / 2, 400);
     }
 
     update() {

@@ -59,3 +59,17 @@ window.requestAnimFrame = (() => {
 const getDistance = (p1, p2) => {
     return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
 };
+
+/**
+ * Get the length of side of a right triangle.
+ * @param {number} hyp The length of hypotenuse of the triangle.
+ * @param {number} s The length of one side of the triangle.
+ * @returns The length of another side of the triangle.
+ */
+const getRightSide = (hyp, s) => {
+    return Math.round(Math.sqrt(hyp * hyp - s * s));
+}
+
+const getAngle = (p1, p2) => {
+    return Math.atan2(p2.x - p1.x, -(p2.y - p1.y)) - Math.PI / 2;
+}

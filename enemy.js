@@ -142,7 +142,7 @@ class Dregfly extends Enemy {
         this.height = 30 * this.scale;
 
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/dregfly.png");
-        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
 
         // 0=walking, 1=attack
         this.state = 1;
@@ -188,7 +188,7 @@ class Dregfly extends Enemy {
 
     update() {
         super.update();
-        this.BB = new BoundingBox(this.x, this.y, this.width, this.height);
+        this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
     }
 }
 
@@ -254,13 +254,13 @@ class Wolf extends Enemy {
     }
 
     updateBB() {
-        if (this.state == 0) this.BB = new BoundingBox(this.x + (29 - 12 * this.direction) * this.scale, 
+        if (this.state == 0) this.BB = new RectangularBB(this.x + (29 - 12 * this.direction) * this.scale, 
                             this.y + 28 * this.scale, 50 * this.scale, 44 * this.scale);
         else {
             if (this.animations[this.state][this.direction].elapsedTime < 0.6) 
-                this.BB = new BoundingBox(this.x + (28 + 10 * this.direction) * this.scale,
+                this.BB = new RectangularBB(this.x + (28 + 10 * this.direction) * this.scale,
                             this.y + 28 * this.scale, 30 * this.scale, 44 * this.scale);
-            else this.BB = new BoundingBox(this.x + (28 - 22 * this.direction) * this.scale, 
+            else this.BB = new RectangularBB(this.x + (28 - 22 * this.direction) * this.scale, 
                             this.y + 28 * this.scale, 62 * this.scale, 44 * this.scale);
         }
     }
@@ -314,10 +314,10 @@ class Monster extends Enemy {
 
     updateBB() {
         if (this.state == 0)
-            this.BB = new BoundingBox(this.x + 7 * this.scale, this.y + 19 * this.scale,
+            this.BB = new RectangularBB(this.x + 7 * this.scale, this.y + 19 * this.scale,
                         52 * this.scale, 32 * this.scale);
         else 
-            this.BB = new BoundingBox(this.x + 12 * this.scale, this.y + 19 * this.scale,
+            this.BB = new RectangularBB(this.x + 12 * this.scale, this.y + 19 * this.scale,
                         40 * this.scale, 38 * this.scale);   
     }
 
@@ -396,7 +396,7 @@ class Projectile {
         this.animations = [];
         this.loadAnimation();
 
-        this.BB = new BoundingBox(this.x + 21 * this.scale, this.y + 22 * this.scale,
+        this.BB = new RectangularBB(this.x + 21 * this.scale, this.y + 22 * this.scale,
             18 * this.scale, 18 * this.scale);
     }
 
@@ -416,7 +416,7 @@ class Projectile {
         if (this.state == 1) {
             this.x += Math.sin(this.angle) * this.speed;
             this.y -= Math.cos(this.angle) * this.speed;
-            this.BB = new BoundingBox(this.x + 21 * this.scale, this.y + 22 * this.scale,
+            this.BB = new RectangularBB(this.x + 21 * this.scale, this.y + 22 * this.scale,
                 18 * this.scale, 18 * this.scale);
         } else if (this.animations[0].elapsedTime >= 0.5) {
             this.removeFromWorld = true;

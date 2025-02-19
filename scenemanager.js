@@ -90,6 +90,20 @@ class SceneManager {
         this.warrior.y = scene.warrior.row * PARAMS.BLOCK_SIZE + PARAMS.BLOCK_SIZE / 2 - this.warrior.height / 2;
         this.game.addEntity(this.warrior);
         this.game.addEntity(this.warrior.blade);
+
+        // Add stable light
+        for (let i = 0; i < this.game.entities.length; i++) {
+            let e1 = this.game.entities[i];
+            if (!e1.light) continue;
+            for (let j = 0; j < this.game.entities.length; j++) {
+                let e2 = this.game.entities[j];
+                if (e2 instanceof Wall && e1.light.BB.collide(e2.BB)) {
+                    e1.light.addWall(e2);
+                }
+            }
+            e1.light.checkLine();
+            e1.light.createArc();
+        }
     }
 
     update() {

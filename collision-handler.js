@@ -45,16 +45,16 @@ class CollisionHandler {
                 if (e1 instanceof Warrior) {
                     // 1
                     if (e2 instanceof Wall && e1.BB.collide(e2.BB)) {
-                        let o = e1.BB.overlap(e2.BB);
-                        if (o.x < o.y) {    // Overlap from left or right
-                            if (e1.BB.left > e2.BB.left && e1.BB.left < e2.BB.right && e1.direction == 1)
-                                e1.x += o.x;
-                            else if (e1.BB.right > e2.BB.left && e1.BB.right < e2.BB.right && e1.direction == 0)
-                                e1.x -= o.x;
-                        } else {    // Overlap from top or bottom
-                            if (e1.BB.top > e2.BB.top && e1.BB.top < e2.BB.bottom) e1.y += o.y;
-                            else e1.y -= o.y;
-                        }
+                        // let o = e1.BB.overlap(e2.BB);
+                        // if (o.x < o.y) {    // Overlap from left or right
+                        //     if (e1.BB.left > e2.BB.left && e1.BB.left < e2.BB.right && e1.direction == 1)
+                        //         e1.x += o.x;
+                        //     else if (e1.BB.right > e2.BB.left && e1.BB.right < e2.BB.right && e1.direction == 0)
+                        //         e1.x -= o.x;
+                        // } else {    // Overlap from top or bottom
+                        //     if (e1.BB.top > e2.BB.top && e1.BB.top < e2.BB.bottom) e1.y += o.y;
+                        //     else e1.y -= o.y;
+                        // }
                     }
                     // 2, 3
                     else if ((e2 instanceof Enemy || e2 instanceof Projectile) && e2.state == 1 
@@ -65,20 +65,20 @@ class CollisionHandler {
                         if (e2 instanceof Projectile) e2.state = 0;
                     }
                     // 4
-                    else if (e2 instanceof Crystal && e1.BB.collide(e2.BB)) {
-                        e1.view += 15;
-                        e1.experience += 10;
-                        e1.crystal++;
-                        e1.health = Math.min(e1.maxHealth, e1.health + 5);
-                        e2.removeFromWorld = true;
-                    }
+                    // else if (e2 instanceof Crystal && e1.BB.collide(e2.BB)) {
+                    //     e1.view += 15;
+                    //     e1.experience += 10;
+                    //     e1.crystal++;
+                    //     e1.health = Math.min(e1.maxHealth, e1.health + 5);
+                    //     e2.removeFromWorld = true;
+                    // }
                     // 5
                     else if (e2 instanceof Key && e1.BB.collide(e2.BB)) {
                         e1.view += 30;
                         game.camera.keyCollected++;
                         e2.removeFromWorld = true;
                         if (game.camera.keyCollected == 5)  // Create exit for the maze
-                            game.addEntity(new Teleporter(game, 28 * PARAMS.BLOCK_SIZE, 42 * PARAMS.BLOCK_SIZE));
+                            game.addEntity(new Teleporter(game, 30 * PARAMS.BLOCK_SIZE, 44 * PARAMS.BLOCK_SIZE));
                     }
                     // 6
                     else if (e2 instanceof Chest && !e2.opened && e2.enemyCount == 0 && e1.BB.collide(e2.BB)) {
