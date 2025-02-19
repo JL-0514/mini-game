@@ -154,6 +154,7 @@ class GameEngine {
 
         if (this.camera.state == 1) {   // If the maze is loaded
             this.lightCtx.save();
+            this.lightCtx.filter = 'blur(20px)';
             this.lightCtx.clearRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
             for (var i = 0; i < this.entities.length; i++) {
                 let e = this.entities[i];

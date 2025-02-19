@@ -30,39 +30,42 @@ class LightSource {
 
         // Check for distance from the edges. 
         // If out of radius of light source, reduce the endpoint of light to farther possible point.
+        let tp = {x: this.x, y:this.y};
+        if (getDistance(ul, tp) <= this.radius || getDistance(ur, tp) <= this.radius
+            || getDistance(ll, tp) <= this.radius || getDistance(lr, tp) <= this.radius) {
+            // Only the top side of horizontal wall can block the light
+            if ((wall instanceof HorizontalWall || wall instanceof BreakableHorizontalWall) 
+                && getRightSide(this.radius, wall.BB.y - this.y)) {
+                if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
+                    ul.x = this.x - getRightSide(this.radius, wall.BB.y - this.y);
+                if (getDistance(ur, {x: this.x, y: this.y}) > this.radius)
+                    ur.x = this.x + getRightSide(this.radius, wall.BB.y - this.y);
+                this.walls.push(new Line([ul, ur]));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ul]));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ur]));
+            }
 
-        // Only the top side of horizontal wall can block the light
-        if ((wall instanceof HorizontalWall || wall instanceof BreakableHorizontalWall) 
-            && getRightSide(this.radius, wall.BB.y - this.y)) {
-            if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
-                ul.x = this.x - getRightSide(this.radius, wall.BB.y - this.y);
-            if (getDistance(ur, {x: this.x, y: this.y}) > this.radius)
-                ur.x = this.x + getRightSide(this.radius, wall.BB.y - this.y);
-            this.walls.push(new Line([ul, ur]));
-            this.lines.push(new Line([{x: this.x, y: this.y}, ul]));
-            this.lines.push(new Line([{x: this.x, y: this.y}, ur]));
-        }
-
-        // Only the left and right side of vertical wall can block the light
-        if (this.x < wall.BB.x 
-            && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
-            if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
-                ul.y = this.y - getRightSide(this.radius, wall.BB.x - this.x);
-            if (getDistance(ll, {x: this.x, y: this.y}) > this.radius)
-                ll.y = this.y + getRightSide(this.radius, wall.BB.x - this.x);
-            this.walls.push(new Line([ul, ll]));
-            this.lines.push(new Line([{x: this.x, y: this.y}, ul]));
-            this.lines.push(new Line([{x: this.x, y: this.y}, ll]));
-        }
-        else if (this.x > wall.BB.x + wall.BB.width  
-            && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
-            if (getDistance(ur, {x: this.x, y: this.y}) > this.radius) 
-                ur.y = this.y - getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
-            if (getDistance(lr, {x: this.x, y: this.y}) > this.radius)
-                lr.y = this.y + getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
-            this.walls.push(new Line([ur, lr]));
-            this.lines.push(new Line([{x: this.x, y: this.y}, ur]));
-            this.lines.push(new Line([{x: this.x, y: this.y}, lr]));
+            // Only the left and right side of vertical wall can block the light
+            if (this.x < wall.BB.x 
+                && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
+                if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
+                    ul.y = this.y - getRightSide(this.radius, wall.BB.x - this.x);
+                if (getDistance(ll, {x: this.x, y: this.y}) > this.radius)
+                    ll.y = this.y + getRightSide(this.radius, wall.BB.x - this.x);
+                this.walls.push(new Line([ul, ll]));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ul]));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ll]));
+            }
+            else if (this.x > wall.BB.x + wall.BB.width  
+                && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
+                if (getDistance(ur, {x: this.x, y: this.y}) > this.radius) 
+                    ur.y = this.y - getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
+                if (getDistance(lr, {x: this.x, y: this.y}) > this.radius)
+                    lr.y = this.y + getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
+                this.walls.push(new Line([ur, lr]));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ur]));
+                this.lines.push(new Line([{x: this.x, y: this.y}, lr]));
+            }
         }
     }
 
@@ -140,8 +143,6 @@ class LightSource {
         //     ctx.stroke();
         // }
 
-        ctx.save();
-        ctx.filter = 'blur(5px)';
         ctx.beginPath();
         ctx.moveTo(this.x - this.game.camera.x, this.y - this.game.camera.y);
         for (let i = 0; i < this.lines.length; i++) {
@@ -159,7 +160,6 @@ class LightSource {
             ctx.arc(a.x - this.game.camera.x, a.y - this.game.camera.y, a.r, a.sa, a.ea);
             ctx.fill();
         }
-        ctx.restore();
     }
 }
 
