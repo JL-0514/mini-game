@@ -30,41 +30,48 @@ class LightSource {
 
         // Check for distance from the edges. 
         // If out of radius of light source, reduce the endpoint of light to farther possible point.
-        let tp = {x: this.x, y:this.y};
-        if (getDistance(ul, tp) <= this.radius || getDistance(ur, tp) <= this.radius
-            || getDistance(ll, tp) <= this.radius || getDistance(lr, tp) <= this.radius) {
-            // Only the top side of horizontal wall can block the light
-            if ((wall instanceof HorizontalWall || wall instanceof BreakableHorizontalWall) 
-                && getRightSide(this.radius, wall.BB.y - this.y)) {
-                if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
-                    ul.x = this.x - getRightSide(this.radius, wall.BB.y - this.y);
-                if (getDistance(ur, {x: this.x, y: this.y}) > this.radius)
-                    ur.x = this.x + getRightSide(this.radius, wall.BB.y - this.y);
-                this.walls.push(new Line([ul, ur]));
-                this.lines.push(new Line([{x: this.x, y: this.y}, ul]));
-                this.lines.push(new Line([{x: this.x, y: this.y}, ur]));
+        if ((wall instanceof HorizontalWall || wall instanceof BreakableHorizontalWall) 
+            && getRightSide(this.radius, wall.BB.y - this.y)) {
+            let original = new Line([{x: ul.x, y: ul.y}, {x: ur.x, y: ur.y}]);
+            if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
+                ul.x = this.x - getRightSide(this.radius, wall.BB.y - this.y);
+            if (getDistance(ur, {x: this.x, y: this.y}) > this.radius)
+                ur.x = this.x + getRightSide(this.radius, wall.BB.y - this.y);
+            let i = this.walls.length;
+            if (original.pointOnLine(ul) && original.pointOnLine(ur)) {
+                this.walls.push(new Line([ul, ur], i));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ul], i));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ur], i));
             }
+        }
 
-            // Only the left and right side of vertical wall can block the light
-            if (this.x < wall.BB.x 
-                && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
-                if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
-                    ul.y = this.y - getRightSide(this.radius, wall.BB.x - this.x);
-                if (getDistance(ll, {x: this.x, y: this.y}) > this.radius)
-                    ll.y = this.y + getRightSide(this.radius, wall.BB.x - this.x);
-                this.walls.push(new Line([ul, ll]));
-                this.lines.push(new Line([{x: this.x, y: this.y}, ul]));
-                this.lines.push(new Line([{x: this.x, y: this.y}, ll]));
+        // Only the left and right side of vertical wall can block the light
+        if (this.x < wall.BB.x 
+            && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
+            let original = new Line([{x: ul.x, y: ul.y}, {x: ll.x, y: ll.y}]);
+            if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
+                ul.y = this.y - getRightSide(this.radius, wall.BB.x - this.x);
+            if (getDistance(ll, {x: this.x, y: this.y}) > this.radius)
+                ll.y = this.y + getRightSide(this.radius, wall.BB.x - this.x);
+            let i = this.walls.length;
+            if (original.pointOnLine(ul) && original.pointOnLine(ll)) {
+                this.walls.push(new Line([ul, ll], i));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ul], i));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ll], i));
             }
-            else if (this.x > wall.BB.x + wall.BB.width  
-                && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
-                if (getDistance(ur, {x: this.x, y: this.y}) > this.radius) 
-                    ur.y = this.y - getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
-                if (getDistance(lr, {x: this.x, y: this.y}) > this.radius)
-                    lr.y = this.y + getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
-                this.walls.push(new Line([ur, lr]));
-                this.lines.push(new Line([{x: this.x, y: this.y}, ur]));
-                this.lines.push(new Line([{x: this.x, y: this.y}, lr]));
+        }
+        else if (this.x > wall.BB.x + wall.BB.width  
+            && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
+            let original = new Line([{x: ur.x, y: ur.y}, {x: lr.x, y: lr.y}]);
+            if (getDistance(ur, {x: this.x, y: this.y}) > this.radius) 
+                ur.y = this.y - getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
+            if (getDistance(lr, {x: this.x, y: this.y}) > this.radius)
+                lr.y = this.y + getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
+            let i = this.walls.length;
+            if (original.pointOnLine(ur) && original.pointOnLine(lr)) {
+                this.walls.push(new Line([ur, lr], i));
+                this.lines.push(new Line([{x: this.x, y: this.y}, ur], i));
+                this.lines.push(new Line([{x: this.x, y: this.y}, lr], i));
             }
         }
     }
@@ -79,14 +86,37 @@ class LightSource {
         for (let i = 0; i < this.walls.length - 1; i++) {
             for (let j = i + 1; j < this.walls.length; j++) {
                 let intersect = this.walls[i].collide(this.walls[j]);
-                if (intersect) this.lines.push(new Line([{x: this.x, y: this.y}, intersect]));
+                if (intersect) {
+                    let l = new Line([{x: this.x, y: this.y}, intersect], i)
+                    this.lines.push(l);
+                    corners.push(l);
+                }
             }
         }
         // Remove light that intersect with wall
         for (let j = 0; j < this.walls.length; j++) {
             for (let i = this.lines.length - 1; i >= 0; --i) {
                 let intersect = this.lines[i].collide(this.walls[j]);
-                if (intersect) this.lines.splice(i, 1);
+                if (intersect) {
+                    // Check if the light is partly blocked
+                    let current = this.walls[this.lines[i].idx];
+                    let l1 = Line.createLine({x: this.x, y: this.y}, this.walls[j].points[0], this.radius);
+                    let l2 = Line.createLine({x: this.x, y: this.y}, this.walls[j].points[1], this.radius);
+                    let newEnd = l1.collide(current);
+                    if (!newEnd) newEnd = l2.collide(current);
+                    if (newEnd) {
+                        let end = {}
+                        if (current.slope() !== false) end = {x: newEnd.x, y: current.points[0].y}
+                        else end = {x: current.points[0].x, y: newEnd.y};
+                        let l = new Line([{x: this.x, y: this.y}, end], this.lines[i].idx);
+                        let count = 0;
+                        for (let k = 0; k < this.walls.length && count < 1; k++) {
+                            if (l.collide(this.walls[k])) count++;
+                        }
+                        if (count < 1) this.lines[i] = l;
+                        else this.lines.splice(i, 1);
+                    } else this.lines.splice(i, 1);
+                }
             }
         }
         // Remove duplicated light
@@ -99,7 +129,13 @@ class LightSource {
         },[]);
         // Sort lines
         this.lines.sort((a, b) => {
-            return getAngle(a.points[0], a.points[1]) - getAngle(b.points[0], b.points[1]);
+            let angle = getAngle(a.points[0], a.points[1]) - getAngle(b.points[0], b.points[1]);
+            if (Math.abs(angle) < 1e-8) {
+                let da = getDistance(a.points[0], a.points[1]);
+                let db = getDistance(b.points[0], b.points[1]);
+                return db - da;
+            }
+            else return angle;
         });
     }
 
@@ -113,16 +149,14 @@ class LightSource {
             let temp = new Line([p1, p2]);
  
             for (let j = 0; j < this.walls.length && temp; j++) {
-                let w = this.walls[j];
-                if (temp.slope() === w.slope() 
-                    && (w.pointOnLine(temp.points[0]) || w.pointOnLine(temp.points[1]) 
-                    || temp.pointOnLine(w.points[0]) || temp.pointOnLine(w.points[1]))) 
-                    temp = false;
+                if (temp.overlap(this.walls[j])) temp = false;
             }
 
             if (temp) {
+                console.log(temp);
                 let tp = {x: this.x, y: this.y};
-                this.arc.push({x: this.x, y: this.y, r: this.radius, sa: getAngle(tp, p1), ea: getAngle(tp, p2)});
+                this.arc.push({x: this.x, y: this.y, r: this.radius, 
+                    sa: getAngle(tp, p1) - Math.PI / 2, ea: getAngle(tp, p2) - Math.PI / 2});
             }
         }
     }
@@ -161,72 +195,4 @@ class LightSource {
             ctx.fill();
         }
     }
-}
-
-class Line {
-    constructor(points) {
-        this.points = points;
-    };
-
-    /**
-     * @returns Slope of this line. Return false if this is a vertical line.
-     */
-    slope() {
-         if (this.points[1].x !== this.points[0].x)
-            return (this.points[1].y - this.points[0].y) / (this.points[1].x - this.points[0].x);
-        else return false;
-    };
-
-    /**
-     * @returns The y-intercept of this line.
-     */
-    yInt() {
-        if (this.points[0].x === this.points[1].x) return this.points[0].x === 0 ? 0 : false;
-        if (this.points[0].y === this.points[1].y) return this.points[0].y;
-        return this.points[0].y - this.slope() * this.points[0].x;
-    };
-
-    /**
-     * Check of the given point is on this line.
-     * 
-     * @param {*} p A point object that has x and y variables.
-     * @returns Whether the given point in on this line.
-     */
-    pointOnLine(p) {
-        let m = this.slope();
-        if (m !== false) {
-            let c = this.yInt();
-            return p.y == (m * p.x + c) && (this.points[0].x <= p.x && p.x <= this.points[1].x 
-                || this.points[1].x <= p.x && p.x <= this.points[0].x);
-        } else {
-            return p.x == this.points[0].x && (this.points[0].y <= p.y && p.y <= this.points[1].y 
-                || this.points[1].y <= p.y && p.y <= this.points[0].y);
-        }
-    }
-
-    // If collide with another line, raturn intersect point
-    // This exclude interaction between start or end point
-    // Algorithm by Paul Bourke: https://paulbourke.net/geometry/pointlineplane/
-    collide(other) {
-        let denom = ((other.points[1].y - other.points[0].y) * (this.points[1].x - this.points[0].x)
-                    - (other.points[1].x - other.points[0].x) * (this.points[1].y - this.points[0].y));
-        if (denom == 0) return false;
-
-        let ua = ((other.points[1].x - other.points[0].x) * (this.points[0].y - other.points[0].y)
-                - (other.points[1].y - other.points[0].y) * (this.points[0].x - other.points[0].x)) / denom;
-        let ub = ((this.points[1].x - this.points[0].x) * (this.points[0].y - other.points[0].y)
-                - (this.points[1].y - this.points[0].y) * (this.points[0].x - other.points[0].x)) / denom;
-        if (ua < 0 || ua > 1 || ub < 0 || ub > 1) return false;
-
-        let x = this.points[0].x + ua * (this.points[1].x - this.points[0].x);
-        let y = this.points[0].y + ua * (this.points[1].y - this.points[0].y);
-
-        if (x == other.points[0].x && y == other.points[0].y
-            || x == other.points[1].x && y == other.points[1].y
-            || x == this.points[0].x && y == this.points[0].y
-            || x == this.points[1].x && y == this.points[1].y)
-            return false;
-        else
-            return {x: x, y: y};
-    };
 }

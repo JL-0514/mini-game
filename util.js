@@ -71,5 +71,5 @@ const getRightSide = (hyp, s) => {
 }
 
 const getAngle = (p1, p2) => {
-    return Math.atan2(p2.x - p1.x, -(p2.y - p1.y)) - Math.PI / 2;
+    return Math.atan2(p2.x - p1.x, -(p2.y - p1.y));
 }
