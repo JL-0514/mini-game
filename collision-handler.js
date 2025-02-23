@@ -91,6 +91,15 @@ class CollisionHandler {
                         game.entities = [];
                         game.camera.state = 2;
                     }
+                    else if (e2.light && e1.BB.collide(e2.light.BB)) {
+                        let l = new Line([{x: e1.BB.x + e1.BB.width / 2, y: e1.BB.y + e1.BB.height}, 
+                            {x: e2.light.x, y: e2.light.y}]);
+                        let hasShadow = true;
+                        for (let i = 0; i < e2.light.walls.length && hasShadow; i++) {
+                            if (l.collide(e2.light.walls[i])) hasShadow = false;
+                        }
+                        if (hasShadow) e1.shadow.lightSources.push(e2.light);
+                    }
                 } 
                 // Collision with enemy
                 else if (e1 instanceof Enemy) {

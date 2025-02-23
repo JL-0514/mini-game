@@ -76,6 +76,10 @@ class Line {
         || other.pointOnLine(this.points[1])));
     }
 
+    length() {
+        return getDistance({x: this.points[0].x, y: this.points[0].y}, {x: this.points[1].x, y: this.points[1].y});
+    }
+
     /**
      * Create a line that start at the start point, collide with the end point, and has the given length.
      * 
@@ -86,6 +90,12 @@ class Line {
      */
     static createLine(start, end, length) {
         let angle = getAngle(start, end);
+        let endX = start.x + Math.sin(angle) * length;
+        let endY = start.y - Math.cos(angle) * length;
+        return new Line([start, {x: endX, y: endY}]);
+    }
+
+    static createLineByAngle(start, angle, length) {
         let endX = start.x + Math.sin(angle) * length;
         let endY = start.y - Math.cos(angle) * length;
         return new Line([start, {x: endX, y: endY}]);

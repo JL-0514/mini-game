@@ -66,6 +66,8 @@ class Warrior {
         /** Time passed since the warrior get hurt. */
         this.elapsednoDamageTime = 0;
 
+        this.shadow = new Shadow(game, this);
+
         /** List of animations */
         this.animations = [];
         this.loadAnimations();
@@ -188,6 +190,7 @@ class Warrior {
 
         // Update bounding box
         this.updateBB();
+        this.shadow.update();
     }
 
     updateBB() {
@@ -209,7 +212,7 @@ class Warrior {
 
     draw(ctx) {
         this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, 
-            this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+            this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.shadow);
     }
 }
 

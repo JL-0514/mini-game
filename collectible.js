@@ -6,7 +6,7 @@ class Crystal {
         this.width = 13 * this.scale;
         this.height = 16 * this.scale;
         this.BB = new RectangularBB(this.x, this.y, this.width, this.height);
-        this.light = new LightSource(this.game, this.x + this.width / 2, this.y + this.height / 2, 550);
+        this.light = new LightSource(this.game, this.x + this.width / 2, this.y + this.height / 2, 500);
     }
 
     update() {

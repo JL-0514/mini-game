@@ -158,14 +158,19 @@ class GameEngine {
             this.lightCtx.clearRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
             for (var i = 0; i < this.entities.length; i++) {
                 let e = this.entities[i];
-                if (e.light 
-                    && e.light.x + e.light.radius > this.camera.x
-                    && e.light.x - e.light.radius < this.camera.x + PARAMS.CANVAS_WIDTH
-                    && e.light.y + e.light.radius > this.camera.y
-                    && e.light.y - e.light.radius < this.camera.y + PARAMS.CANVAS_HEIGHT) {
-                    this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.99)";
-                    e.light.fillLight(this.lightCtx);
-                } else if (e instanceof Warrior) {
+                // if (e.light 
+                //     && e.light.x + e.light.radius > this.camera.x
+                //     && e.light.x - e.light.radius < this.camera.x + PARAMS.CANVAS_WIDTH
+                //     && e.light.y + e.light.radius > this.camera.y
+                //     && e.light.y - e.light.radius < this.camera.y + PARAMS.CANVAS_HEIGHT) {
+                //     this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.99)";
+                //     e.light.fillLight(this.lightCtx);
+                // } else 
+                if (e instanceof Warrior) {
+                    e.shadow.lightSources.forEach(l => {
+                        this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.99)";
+                        l.fillLight(this.lightCtx);
+                    })
                     this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.7)";
                     this.lightCtx.beginPath();
                     this.lightCtx.arc(e.x + e.width / 2 - this.camera.x, 

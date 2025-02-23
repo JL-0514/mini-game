@@ -73,3 +73,7 @@ const getRightSide = (hyp, s) => {
 const getAngle = (p1, p2) => {
     return Math.atan2(p2.x - p1.x, -(p2.y - p1.y));
 }
+
+const getEllipseRadius = (a, b, theta) => {
+    return Math.sqrt(a * a * Math.cos(theta) * Math.cos(theta) + b * b * Math.sin(theta) * Math.sin(theta));
+}
