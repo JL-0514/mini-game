@@ -44,31 +44,42 @@ class Animator {
             let ww = shadow.owner.BB.width;
             let wh = shadow.owner.BB.height;
 
-            let sw = 24;
             for (let i = 0; i < shadow.length.length; i++) {
                 ctx.save();
                 ctx.filter = "blur(5px)";
                 ctx.fillStyle = `rgba(0, 0, 0, 0.6)`;
+                // Bound for shadow that cast on the wall
                 let upperBound = 0;
                 let lowerBound = shadow.lowerBound ? shadow.lowerBound - shadow.game.camera.y : PARAMS.CANVAS_HEIGHT;
                 let leftBound = shadow.leftBound ? shadow.leftBound - shadow.game.camera.x : 0;
                 let rightBound = shadow.rightBound ? shadow.rightBound - shadow.game.camera.x : PARAMS.CANVAS_WIDTH;
+                // Ellipse
+                let ex = wx + ww / 2 + Math.sin(shadow.angle[i]) * (shadow.length[i] / 2 + ww / 2);
+                let ey = wy + wh - Math.cos(shadow.angle[i]) * (shadow.length[i] / 2 + ww / 2);
+                let xr = 30;
+                let yr = shadow.length[i] / 2 + ww;
                 if (shadow.segment[i].length > 0) {
+                    ctx.save();
                     ctx.beginPath();
-                    ctx.roundRect(shadow.segment[i][1].x - sw * 2 - shadow.game.camera.x, 
-                        shadow.segment[i][1].y - shadow.game.camera.y, sw * 2, shadow.length[i], 60);
+                    let l = shadow.segment[i][1].line;
+                    ctx.rect(l.points[0].x - shadow.game.camera.x, 
+                        l.points[0].y - PARAMS.BLOCK_SIZE * 2 - shadow.game.camera.y, 
+                        l.length(), PARAMS.BLOCK_SIZE * 2);
+                    ctx.clip();
+                    ctx.beginPath();
+                    let r = xr * Math.max(1, 
+                        Math.abs(shadow.angle[i] + (shadow.angle[i] >= 0 ? Math.PI / 2 : -Math.PI / 2)) / (Math.PI / 2));
+                    ctx.ellipse(shadow.segment[i][0].x + (shadow.angle[i] >= 0 ? -r / 2 : r / 2) / 2 - shadow.game.camera.x, 
+                        shadow.segment[i][1].y - shadow.game.camera.y, r, yr, 0, 0, Math.PI * 2);
                     ctx.fill();
+                    ctx.restore();
                     upperBound = shadow.segment[i][0].y - shadow.game.camera.y;
                 }
                 ctx.beginPath();
                 ctx.rect(leftBound, upperBound, rightBound - leftBound, lowerBound - upperBound);
                 ctx.clip();
-                ctx.translate(wx + sw - shadow.game.camera.x, wy + wh - shadow.game.camera.y);
-                ctx.rotate(shadow.angle[i]);
                 ctx.beginPath();
-                ctx.ellipse(0, -shadow.length[i] / 2, sw, shadow.length[i] / 2, 0, 0, Math.PI * 2);
-                ctx.rotate(-shadow.angle[i]);
-                ctx.translate(-(wx + sw - shadow.game.camera.x), -(wy + wh - shadow.game.camera.y));
+                ctx.ellipse(ex - shadow.game.camera.x, ey - shadow.game.camera.y, xr, yr, shadow.angle[i], 0, Math.PI * 2);
                 ctx.fill();
                 ctx.restore();
             }

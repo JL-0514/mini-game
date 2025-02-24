@@ -76,6 +76,9 @@ class Line {
         || other.pointOnLine(this.points[1])));
     }
 
+    /**
+     * @returns Lenght of the line of point 0 to point 1.
+     */
     length() {
         return getDistance({x: this.points[0].x, y: this.points[0].y}, {x: this.points[1].x, y: this.points[1].y});
     }
@@ -95,6 +98,14 @@ class Line {
         return new Line([start, {x: endX, y: endY}]);
     }
 
+    /**
+     * Create a line that start at the start point, move toward the given angle, and has the given length.
+     * 
+     * @param {*} start A start point with x and y coordinates.
+     * @param {*} angle The angle of the line.
+     * @param {*} length The length of the line.
+     * @returns 
+     */
     static createLineByAngle(start, angle, length) {
         let endX = start.x + Math.sin(angle) * length;
         let endY = start.y - Math.cos(angle) * length;

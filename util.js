@@ -62,6 +62,7 @@ const getDistance = (p1, p2) => {
 
 /**
  * Get the length of side of a right triangle.
+ * 
  * @param {number} hyp The length of hypotenuse of the triangle.
  * @param {number} s The length of one side of the triangle.
  * @returns The length of another side of the triangle.
@@ -70,10 +71,13 @@ const getRightSide = (hyp, s) => {
     return Math.round(Math.sqrt(hyp * hyp - s * s));
 }
 
+/**
+ * Get angle between two points.
+ * 
+ * @param {*} p1 Point 1 that consist of x and y variables.
+ * @param {*} p2 Point 1 that consist of x and y variables.
+ * @returns The angle between two points.
+ */
 const getAngle = (p1, p2) => {
     return Math.atan2(p2.x - p1.x, -(p2.y - p1.y));
-}
-
-const getEllipseRadius = (a, b, theta) => {
-    return Math.sqrt(a * a * Math.cos(theta) * Math.cos(theta) + b * b * Math.sin(theta) * Math.sin(theta));
 }

@@ -66,6 +66,7 @@ class Warrior {
         /** Time passed since the warrior get hurt. */
         this.elapsednoDamageTime = 0;
 
+        /** Shadow of the warrior */
         this.shadow = new Shadow(game, this);
 
         /** List of animations */

@@ -13,8 +13,9 @@ class LightSource {
         this.arc = [];
         this.turn = [];
         this.cut = [];
+        this.originalWall = [];
         this.BB = new CircularBB(this.x, this.y, this.radius);
-        this.assumeHeight = 200;
+        this.assumeHeight = 100;
     }
 
     /**
@@ -44,6 +45,7 @@ class LightSource {
         if ((wall instanceof HorizontalWall || wall instanceof BreakableHorizontalWall) 
             && getRightSide(this.radius, wall.BB.y - this.y)) {
             let original = new Line([{x: ul.x, y: ul.y}, {x: ur.x, y: ur.y}]);
+            this.originalWall.push(original);
             this.turn.push(new Line([{x: wall.BB.x, y: wall.BB.y + PARAMS.BLOCK_SIZE * 2}, 
                 {x: wall.BB.x + wall.BB.width, y: wall.BB.y + PARAMS.BLOCK_SIZE * 2}]));
             if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
@@ -62,6 +64,7 @@ class LightSource {
         if (this.x < wall.BB.x 
             && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
             let original = new Line([{x: ul.x, y: ul.y}, {x: ll.x, y: ll.y}]);
+            this.originalWall.push(original);
             this.cut.push(original);
             if (getDistance(ul, {x: this.x, y: this.y}) > this.radius) 
                 ul.y = this.y - getRightSide(this.radius, wall.BB.x - this.x);
@@ -77,6 +80,7 @@ class LightSource {
         else if (this.x > wall.BB.x + wall.BB.width  
             && (wall instanceof VerticalWall || wall instanceof BreakableVerticalWall)) {
             let original = new Line([{x: ur.x, y: ur.y}, {x: lr.x, y: lr.y}]);
+            this.originalWall.push(original);
             this.cut.push(original);
             if (getDistance(ur, {x: this.x, y: this.y}) > this.radius) 
                 ur.y = this.y - getRightSide(this.radius, wall.BB.x + wall.BB.width - this.x);
