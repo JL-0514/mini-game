@@ -1,13 +1,20 @@
-class VerticalWall {
+class Wall {
     constructor(game, x, y, count) {
+        if (this.constructor == Wall) {
+            throw new Error("Abstract classes can't be instantiated.");
+        }
         Object.assign(this, { game, x, y, count });
+    }
+}
+
+class VerticalWall extends Wall {
+    constructor(game, x, y, count) {
+        super(game, x, y, count);
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/short-bricks.png");
-        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE * count);
+        this.BB = new RectangularBB(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE * count);
     }
 
-    update() {
-
-    }
+    update() {}
 
     draw(ctx) {
         for (let i = 0; i < this.count; i++) {
@@ -19,16 +26,14 @@ class VerticalWall {
     }
 }
 
-class HorizontalWall {
+class HorizontalWall extends Wall {
     constructor(game, x, y, count) {
-        Object.assign(this, { game, x, y, count });
+        super(game, x, y, count);
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/long-bricks.png");
-        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE * count, PARAMS.BLOCK_SIZE);
+        this.BB = new RectangularBB(this.x, this.y, PARAMS.BLOCK_SIZE * count, PARAMS.BLOCK_SIZE);
     }
 
-    update() {
-
-    }
+    update() {}
 
     draw(ctx) {
         for (let i = 0; i < this.count; i++) {
@@ -40,16 +45,14 @@ class HorizontalWall {
     }
 }
 
-class BreakableVerticalWall {
+class BreakableVerticalWall extends Wall {
     constructor(game, x, y, count) {
-        Object.assign(this, { game, x, y, count });
+        super(game, x, y, count);
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/short-bricks.png");
-        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE * count);
+        this.BB = new RectangularBB(this.x, this.y, PARAMS.BLOCK_SIZE, PARAMS.BLOCK_SIZE * count);
     }
 
-    update() {
-
-    }
+    update() {}
 
     draw(ctx) {
         for (let i = 0; i < this.count; i++) {
@@ -61,16 +64,14 @@ class BreakableVerticalWall {
     }
 }
 
-class BreakableHorizontalWall {
+class BreakableHorizontalWall extends Wall {
     constructor(game, x, y, count) {
-        Object.assign(this, { game, x, y, count });
+        super(game, x, y, count);
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/long-bricks.png");
-        this.BB = new BoundingBox(this.x, this.y, PARAMS.BLOCK_SIZE * count, PARAMS.BLOCK_SIZE);
+        this.BB = new RectangularBB(this.x, this.y, PARAMS.BLOCK_SIZE * count, PARAMS.BLOCK_SIZE);
     }
 
-    update() {
-
-    }
+    update() {}
 
     draw(ctx) {
         for (let i = 0; i < this.count; i++) {
@@ -88,9 +89,7 @@ class Floor {
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/floors.png");
     }
 
-    update() {
-
-    }
+    update() {}
 
     draw(ctx) {
         for (let i = 0; i < this.xCount; i++) {
@@ -110,12 +109,10 @@ class Teleporter {
         Object.assign(this, { game, x, y });
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/teleportCircle.png");
         this.animation = new Animator(this.spritesheet, 2, 3, 4, 256, 256, 4, 0.3, 0, false, true);
-        this.BB = new BoundingBox(this.x, this.y, 256, 256);
+        this.BB = new CircularBB(this.x, this.y, 256);
     }
 
-    update() {
-
-    }
+    update() {}
 
     draw(ctx) {
         this.animation.drawFrame(this.game.clockTick, ctx, 

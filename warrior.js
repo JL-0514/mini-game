@@ -4,13 +4,13 @@ class Warrior {
         this.spritsheet = ASSET_MANAGER.getAsset("./sprites/warrior.png");
 
         /** Scale of the warrior. */
-        this.scale = PARAMS.WARRIOR_WIDTH / 69;
+        this.scale = 207 / 69;
 
         /** Width of the frame of the warrior. */
-        this.width = PARAMS.WARRIOR_WIDTH;
+        this.width = 69 * this.scale;
 
         /** Height of the frame of the warrior. */
-        this.height = PARAMS.WARRIOR_HEIGHT;
+        this.height = 44 * this.scale;
 
         /** State of the warrior (which animation to draw): 0=idle, 1=run, 2=attack, 3=hurt 4=death */
         this.state = 0;
@@ -18,8 +18,6 @@ class Warrior {
         /** Direction of the warrior: 0=right, 1=left */
         this.direction = 0; 
 
-        /** Whether the warrior is visible. */
-        this.isLighting = true;
 
         /** Speed of running */
         this.speed = 8;
@@ -36,26 +34,40 @@ class Warrior {
         /** The blade used to attack. */
         this.blade = new Blade(this.game, this);
 
+
         /** Radius of the circle of visible range. */
         this.view = 200;
 
         /** Experience of current level. */
         this.experience = 0;
 
+        /** Experience needed to level up. */
+        this.expToNextLevel = 30;
+
         /** The current level. */
         this.level = 0;
 
-        /** Avaliable points for upgrade. */
-        this.upgradePoint = 0;
+        /** Number of crystal owned. */
+        this.crystal = 2;
 
-        /** 
-         * Time required to finish attack (attack can't be stop by other action). 
-         * Total = # of frame * frame duration.
-         */
-        this.totalAttackTime = 0.07 * 12;
+        /** Number of health portion warrior has. */
+        this.healthPortion = 0;
 
-        /** Time passed since the warrior start attack. */
-        this.elapsedAttackTime = 0;
+        /** Number of axe warrior has. */
+        this.axe = 1;
+
+
+        /** Time passed since current animation start. */
+        this.elapsedTime = 0;
+
+        /** Whether the warrior enter the state which cannot be hurt. */
+        this.noDamage = false;
+
+        /** Time passed since the warrior get hurt. */
+        this.elapsednoDamageTime = 0;
+
+        /** Shadow of the warrior */
+        this.shadow = new Shadow(game, this);
 
         /** List of animations */
         this.animations = [];
@@ -64,7 +76,7 @@ class Warrior {
     }
 
     loadAnimations() {
-        for (var i = 0; i < 8; i++) { // 5 animations
+        for (var i = 0; i < 5; i++) { // 5 animations
             this.animations.push([]);
             for (var j = 0; j < 2; j++) { // 2 directions
                 this.animations[i].push([]);
@@ -101,17 +113,41 @@ class Warrior {
      * - If no key or mouse event, change state to idle.
      */
     update() {
-        if (this.health <= 0) {
-            this.state = 3;
-        } else if (this.state == 2) {
-            this.elapsedAttackTime += this.game.clockTick;
-            if (this.elapsedAttackTime >= this.totalAttackTime) {
-                this.elapsedAttackTime = 0;
+        // Check if the warrior die
+        if (this.health <= 0) {     // Dead
+            this.state = 4;
+        } 
+        // Attacking, update tine
+        else if (this.state == 2) { 
+            this.elapsedTime += this.game.clockTick;
+            if (this.elapsedTime >= 0.84) {
+                this.elapsedTime = 0;
                 this.state = 0;
             }
-        } else if (this.game.click != null) {
+        } 
+        // Get attacked, update time and change to no damage state
+        else if (this.state == 3) {
+            this.elapsedTime += this.game.clockTick;
+            if (this.elapsedTime >= 0.4) {
+                this.elapsedTime = 0;
+                this.state = 0;
+                this.noDamage = true;
+            }
+        }
+        // Dead, play animation and display game over screen
+        else if (this.state == 4) {
+            this.elapsedTime += this.game.clockTick;
+            if (this.elapsedTime >= 1.32) {
+                this.elapsedTime = 0;
+                this.removeFromWorld = true;    // TODO: Replace with game over screen
+            }
+        } 
+        // Detect click, start attack
+        else if (this.game.click != null) {
             this.state = 2;
-        } else if (this.game.keyA || this.game.keyD || this.game.keyS || this.game.keyW) {
+        } 
+        // Detect keys, update position and direciton
+        else if (this.game.keyA || this.game.keyD || this.game.keyS || this.game.keyW) {  // Running
             if (this.game.keyA) {
                 this.x -= this.speed;
                 this.direction = 1;
@@ -127,24 +163,49 @@ class Warrior {
                 this.y -= this.speed;
             }
             this.state = 1;
-        } else {
+        } 
+        // No action, idle state
+        else {
             this.state = 0;
         }
+
+        // Update "No Damage" state
+        if (this.noDamage) {
+            this.elapsednoDamageTime += this.game.clockTick;
+            if (this.elapsednoDamageTime >= 1.5) {
+                this.noDamage = false;
+                this.elapsednoDamageTime = 0;
+            }
+        }
+
+        // Level up
+        if (this.experience >= this.expToNextLevel) {
+            this.level++;
+            this.experience %= 30;
+            this.expToNextLevel += 5;
+            this.attack += 2;
+            let perc = this.health / this.maxHealth;
+            this.maxHealth += 10;
+            this.health = Math.round(this.maxHealth * perc);
+        }
+
+        // Update bounding box
         this.updateBB();
+        this.shadow.update();
     }
 
     updateBB() {
         switch(this.state) {
             case 0:
-                this.BB = new BoundingBox(this.x + (16 + 16 * this.direction) * this.scale, this.y + 10 * this.scale, 
+                this.BB = new RectangularBB(this.x + (16 + 16 * this.direction) * this.scale, this.y + 10 * this.scale, 
                                         21 * this.scale, 33 * this.scale);
                 break;
             case 1:
-                this.BB = new BoundingBox(this.x + (11 + 16 * this.direction) * this.scale, this.y + 10 * this.scale, 
+                this.BB = new RectangularBB(this.x + (11 + 16 * this.direction) * this.scale, this.y + 10 * this.scale, 
                                         31 * this.scale, 33 * this.scale);
                 break;
             case 2: case 3:
-                this.BB = new BoundingBox(this.x + (16 + 13 * this.direction)  * this.scale, this.y + 10 * this.scale, 
+                this.BB = new RectangularBB(this.x + (16 + 13 * this.direction)  * this.scale, this.y + 10 * this.scale, 
                                         24 * this.scale, 33 * this.scale);
                 break;
         }
@@ -152,10 +213,13 @@ class Warrior {
 
     draw(ctx) {
         this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, 
-            this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+            this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale, this.shadow);
     }
 }
 
+/**
+ * The blade the warrior hold. Used to set bounding box.
+ */
 class Blade {
     constructor(game, warrior) {
         Object.assign(this, { game, warrior });
@@ -163,11 +227,11 @@ class Blade {
 
     update() {
         if (this.warrior.state == 2) {
-            this.BB = new BoundingBox(this.warrior.x + (40 - 36 * this.warrior.direction) * this.warrior.scale, 
+            this.BB = new RectangularBB(this.warrior.x + (40 - 36 * this.warrior.direction) * this.warrior.scale, 
                         this.warrior.y + 10 * this.warrior.scale, 
                         25 * this.warrior.scale, 33 * this.warrior.scale);
         } else {
-            this.BB = new BoundingBox(0, 0, 0, 0);
+            this.BB = new RectangularBB(0, 0, 0, 0);
         }
     }
 

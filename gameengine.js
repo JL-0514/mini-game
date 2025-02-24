@@ -151,20 +151,30 @@ class GameEngine {
         for (var i = 0; i < this.entities.length; i++) {
             this.entities[i].draw(this.ctx);
         }
-        
-        this.camera.draw(this.ctx);
 
         if (this.camera.state == 1) {   // If the maze is loaded
             this.lightCtx.save();
+            this.lightCtx.filter = 'blur(20px)';
             this.lightCtx.clearRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
             for (var i = 0; i < this.entities.length; i++) {
                 let e = this.entities[i];
-                if (e.isLighting) {
-                    let cx = e.x + e.width / 2;
-                    let cy = e.y + e.height / 2;
+                if (e.light 
+                    && e.light.x + e.light.radius > this.camera.x
+                    && e.light.x - e.light.radius < this.camera.x + PARAMS.CANVAS_WIDTH
+                    && e.light.y + e.light.radius > this.camera.y
+                    && e.light.y - e.light.radius < this.camera.y + PARAMS.CANVAS_HEIGHT) {
                     this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.99)";
+                    e.light.fillLight(this.lightCtx);
+                } else 
+                if (e instanceof Warrior) {
+                    // e.shadow.lightSources.forEach(l => {
+                    //     this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.99)";
+                    //     l.fillLight(this.lightCtx);
+                    // })
+                    this.lightCtx.fillStyle = "rgba(0, 0, 0, 0.7)";
                     this.lightCtx.beginPath();
-                    this.lightCtx.arc(cx - this.camera.x, cy - this.camera.y, e.view, 0, 2 * Math.PI);
+                    this.lightCtx.arc(e.x + e.width / 2 - this.camera.x, 
+                        e.BB.y + e.BB.height / 2 - this.camera.y, e.view, 0, 2 * Math.PI);
                     this.lightCtx.fill();
                 }
             }
@@ -175,10 +185,14 @@ class GameEngine {
         } else {
             this.lightCtx.clearRect(0, 0, PARAMS.CANVAS_WIDTH, PARAMS.CANVAS_HEIGHT);
         }
+
+        this.camera.draw(this.ctx);
     };
 
     update() {
         let entitiesCount = this.entities.length;
+
+        this.camera.update();
 
         for (let i = 0; i < entitiesCount; i++) {
             let entity = this.entities[i];
@@ -187,8 +201,6 @@ class GameEngine {
                 entity.update();
             }
         }
-
-        this.camera.update();
 
         CollisionHandler.handleCollision(this, this.entities);
 
