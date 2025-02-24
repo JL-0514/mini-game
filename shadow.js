@@ -25,7 +25,9 @@ class Shadow {
                 {x: this.owner.BB.x + this.owner.BB.width / 2, y: this.owner.BB.y + this.owner.BB.height});
             // Anle between light source and the top of the characer
             let a = Math.atan2(d, this.owner.BB.height + light.assumeHeight - this.owner.BB.height);
-            this.length.push(Math.abs(Math.sin(a) * light.assumeHeight - d));
+            let l = Math.abs(Math.sin(a) * light.assumeHeight - d);
+            if (l + d > light.radius) this.length.push(light.radius - d);
+            else this.length.push(l);
             this.angle.push(Math.atan2(light.y - this.owner.BB.y,
                 light.x - this.owner.BB.x + this.owner.BB.width / 2) - Math.PI / 2);
             
