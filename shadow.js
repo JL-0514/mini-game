@@ -34,7 +34,8 @@ class Shadow {
             // Determine whether the shadow is cast on the wall
             this.segment.push([]);
             let s = Line.createLineByAngle({x: this.owner.BB.x + this.owner.BB.width / 2, 
-                y: this.owner.BB.y + this.owner.BB.height}, this.angle[i], this.length[i] + 50);
+                y: this.owner.BB.y + this.owner.BB.height}, this.angle[i], this.length[i]);
+            // Wall to cast
             light.turn.forEach(t => {
                 let collide = t.collide(s);
                 if (collide) {
@@ -47,9 +48,17 @@ class Shadow {
                 }
                 
             });
+            // Wall to block
             light.cut.forEach(c => {
                 let collide = c.collide(s);
-                if (collide) {
+                if (c.points[0].y === c.points[1].y && (this.owner.BB.y + this.owner.BB.height == c.points[0].y
+                    || this.owner.BB.y + this.owner.BB.height == c.points[0].y + this.owner.speed)) {
+                    this.lowerBound = c.points[0].y;
+                    s = new Line([{x: this.owner.BB.x + this.owner.BB.width / 2, 
+                        y: this.owner.BB.y + this.owner.BB.height}, {x: this.owner.BB.x + this.owner.BB.width / 2, 
+                        y: this.owner.BB.y + this.owner.BB.height}]);
+                }
+                else if (collide) {
                     if (c.points[0].x === c.points[1].x && this.owner.BB.x < c.points[0].x)
                         this.rightBound = c.points[0].x;
                     else if (c.points[0].x === c.points[1].x && this.owner.BB.x > c.points[0].x) 
