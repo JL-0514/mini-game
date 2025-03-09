@@ -70,7 +70,7 @@ class Animator {
                     ctx.beginPath();
                     let intersect = l.collideRotatedEllipse(xr, yr, ex, ey, -shadow.angle[i]);
                     let r = getDistance(intersect[0], intersect[1]) / 2;
-                    ctx.ellipse(shadow.segment[i][0].x + (shadow.angle[i] >= 0 ? -r / 2 : r / 2) / 2 - shadow.game.camera.x, 
+                    ctx.ellipse(shadow.segment[i][0].x - shadow.game.camera.x, 
                         shadow.segment[i][1].y - shadow.game.camera.y, r, yr, 0, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.restore();
@@ -85,44 +85,6 @@ class Animator {
                 ctx.fill();
                 ctx.restore();
             }
-
-            // for (let i = 0; i < shadow.length.length; i++) {
-            //     let shadowCanvas = document.createElement("canvas");
-            //     let shadowCtx = shadowCanvas.getContext("2d");
-            //     shadowCanvas.width = shadow.length[i] * 2;
-            //     shadowCanvas.height = shadowCanvas.width;
-            //     shadowCtx.save();
-            //     shadowCtx.globalAlpha = 0.7;
-            //     shadowCtx.filter = "blur(5px)";
-            //     shadowCtx.translate(shadowCanvas.width / 2, shadowCanvas.height / 2);
-            //     shadowCtx.rotate(shadow.angle[i]);
-            //     shadowCtx.translate(-shadowCanvas.width / 2, -shadowCanvas.height / 2);
-            //     if (this.flip) {
-            //         shadowCtx.scale(-1, 1);
-            //         shadowCtx.drawImage(this.spritesheet,
-            //             col * (this.width + this.framePadding), row * this.height,
-            //             this.width, this.height,
-            //             -shadowCanvas.width / 2 - this.width * scale / 2, 
-            //             shadowCanvas.height / 2 - shadow.length[i],
-            //             this.width * scale, shadow.length[i]);     
-            //     } else {
-            //         shadowCtx.drawImage(this.spritesheet,
-            //             col * (this.width + this.framePadding), row * this.height,
-            //             this.width, this.height,
-            //             shadowCanvas.width / 2 - this.width * scale / 2, 
-            //             shadowCanvas.height / 2 - shadow.length[i],
-            //             this.width * scale, shadow.length[i]);
-            //     }
-            //     shadowCtx.restore();
-            //     shadowCtx.globalCompositeOperation='source-atop';
-            //     shadowCtx.fillStyle="rgb(20, 20, 20)";
-            //     shadowCtx.fillRect(0, 0, shadowCanvas.width, shadowCanvas.height);
-
-            //     // Rotate shadow
-            //     ctx.drawImage(shadowCanvas, wx + ww / 2 - shadowCanvas.width / 2 - shadow.game.camera.x, 
-            //         wy + wh + -ww / 2 - shadowCanvas.height / 2 - shadow.game.camera.y, 
-            //         shadowCanvas.width, shadowCanvas.height);
-            // }
         }
        
         if (this.flip) {
