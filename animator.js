@@ -56,8 +56,9 @@ class Animator {
                 // Ellipse
                 let ex = wx + ww / 2 + Math.sin(shadow.angle[i]) * (shadow.length[i] / 2 + ww / 2);
                 let ey = wy + wh - Math.cos(shadow.angle[i]) * (shadow.length[i] / 2 + ww / 2);
-                let xr = 30;
+                let xr = 26;
                 let yr = shadow.length[i] / 2 + ww;
+                // Shadow on wall
                 if (shadow.segment[i].length > 0) {
                     ctx.save();
                     ctx.beginPath();
@@ -67,14 +68,15 @@ class Animator {
                         l.length(), PARAMS.BLOCK_SIZE * 2);
                     ctx.clip();
                     ctx.beginPath();
-                    let r = xr * Math.max(1, 
-                        Math.abs(shadow.angle[i] + (shadow.angle[i] >= 0 ? Math.PI / 2 : -Math.PI / 2)) / (Math.PI / 2));
-                    ctx.ellipse(shadow.segment[i][0].x + (shadow.angle[i] >= 0 ? -r / 2 : r / 2) / 2 - shadow.game.camera.x, 
+                    let intersect = l.collideRotatedEllipse(xr, yr, ex, ey, -shadow.angle[i]);
+                    let r = getDistance(intersect[0], intersect[1]) / 2;
+                    ctx.ellipse(shadow.segment[i][0].x - shadow.game.camera.x, 
                         shadow.segment[i][1].y - shadow.game.camera.y, r, yr, 0, 0, Math.PI * 2);
                     ctx.fill();
                     ctx.restore();
                     upperBound = shadow.segment[i][0].y - shadow.game.camera.y;
                 }
+                // Shadow on ground
                 ctx.beginPath();
                 ctx.rect(leftBound, upperBound, rightBound - leftBound, lowerBound - upperBound);
                 ctx.clip();
@@ -83,47 +85,6 @@ class Animator {
                 ctx.fill();
                 ctx.restore();
             }
-
-            // for (let i = 0; i < shadow.length.length; i++) {
-            //     let shadowCanvas = document.createElement("canvas");
-            //     let shadowCtx = shadowCanvas.getContext("2d");
-            //     shadowCanvas.width = shadow.length[i] * 2;
-            //     shadowCanvas.height = shadowCanvas.width;
-            //     shadowCtx.save();
-            //     shadowCtx.globalAlpha = 0.7;
-            //     shadowCtx.translate(shadowCanvas.width / 2, shadowCanvas.height / 2);
-            //     shadowCtx.rotate(shadow.angle[i]);
-            //     shadowCtx.translate(-shadowCanvas.width / 2, -shadowCanvas.height / 2);
-            //     if (this.flip) {
-            //         shadowCtx.scale(-1, 1);
-            //         shadowCtx.drawImage(this.spritesheet,
-            //             col * (this.width + this.framePadding), row * this.height,
-            //             this.width, this.height,
-            //             -shadowCanvas.width / 2 - this.width * scale / 2, 
-            //             shadowCanvas.height / 2 - shadow.length[i],
-            //             this.width * scale, shadow.length[i]);     
-            //     } else {
-            //         shadowCtx.drawImage(this.spritesheet,
-            //             col * (this.width + this.framePadding), row * this.height,
-            //             this.width, this.height,
-            //             shadowCanvas.width / 2 - this.width * scale / 2, 
-            //             shadowCanvas.height / 2 - shadow.length[i],
-            //             this.width * scale, shadow.length[i]);
-            //     }
-            //     shadowCtx.restore();
-            //     shadowCtx.strokeRect(0, 0, shadowCanvas.width, shadowCanvas.height);
-            //     shadowCtx.globalCompositeOperation='source-atop';
-            //     shadowCtx.fillStyle="rgb(20, 20, 20)";
-            //     shadowCtx.fillRect(0, 0, shadowCanvas.width, shadowCanvas.height);
-
-            //     // Rotate shadow
-            //     ctx.fillRect(x + ww / 2 - shadowCanvas.width / 2 - shadow.game.camera.x, 
-            //         wy + wh - shadowCanvas.height / 2 - shadow.game.camera.y, 
-            //         shadowCanvas.width, shadowCanvas.height);
-            //     ctx.drawImage(shadowCanvas, wx + ww / 2 - shadowCanvas.width / 2 - shadow.game.camera.x, 
-            //         wy + wh - shadowCanvas.height / 2 - shadow.game.camera.y, 
-            //         shadowCanvas.width, shadowCanvas.height);
-            // }
         }
        
         if (this.flip) {
